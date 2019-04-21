@@ -1,29 +1,55 @@
 package me.cangming.cmautotrack;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import me.cangming.autotrack.CmDataApi;
 
 /**
- *
  * @author cangming
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * data
+     */
     public static final int PERMISSION_READ_CONTACTS = 100;
+    /**
+     * UI
+     */
+    private Button mBtnClickTest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initView();
+
         initPermission();
+    }
+
+    private void initView() {
+        mBtnClickTest = findViewById(R.id.btn_click_test);
+        mBtnClickTest.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            default:
+                break;
+            case R.id.btn_click_test:
+                Toast.makeText(this, "点击测试", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     private void initPermission() {
@@ -59,4 +85,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         CmDataApi.getInstance().removeAutoTrackActivity(MainActivity.class);
     }
+
+
 }
