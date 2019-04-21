@@ -15,6 +15,7 @@ import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,9 +62,14 @@ import java.util.Map;
         if (activity == null) {
             return;
         }
-        if (mIgnoreActivities.contains(activity.hashCode())) {
+
+        if (mIgnoreActivities != null && mIgnoreActivities.size() > 0
+                && mIgnoreActivities.contains(activity.hashCode())) {
             mIgnoreActivities.remove(activity.hashCode());
+        } else {
+            CmLog.e("please check mainfest has already  added needed use permission");
         }
+
     }
 
     /**

@@ -10,7 +10,24 @@
 ```
 
 ## 已完成
-1. 监听每个页面显示的 Activity + Title
+1. 浏览页面显示监听
+(1) 上报 title + 本机信息
+(2) 适配权限，重复 onResume 事件 ，详情请看demo 中的写法
+    ```java
+
+    // 在申请权限的时候移除统计
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+             CmDataApi.getInstance().ignoreAutoTrackActivity(MainActivity.class);
+        }
+        // 在 onStop() 恢复申请权限的统计
+        @Override
+        protected void onStop() {
+             super.onStop();
+             CmDataApi.getInstance().removeAutoTrackActivity(MainActivity.class);
+        }
+    ```
 
 ## todo
 1.
