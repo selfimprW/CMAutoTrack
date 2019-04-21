@@ -34,7 +34,7 @@ public class CmDataApi {
     }
 
     /**
-     * 私有化成员变量
+     * 私有构造方法
      *
      * @param application
      */
