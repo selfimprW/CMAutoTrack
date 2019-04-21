@@ -5,7 +5,7 @@
 ## 使用方法
 ```java
 
-    implementation 'me.cangming.autotrack:autotrack:0.0.1'
+    implementation 'me.cangming.autotrack:autotrack:0.0.2'
 
 ```
 
@@ -28,6 +28,7 @@
              CmDataApi.getInstance().removeAutoTrackActivity(MainActivity.class);
         }
     ```
+2. Button类 View 点击可以监听
 
 ## todo
-1.
+1. ASM 监听事件替代反射
