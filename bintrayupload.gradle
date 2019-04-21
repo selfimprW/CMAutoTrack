@@ -1,0 +1,115 @@
+// 构建Maven依赖库脚本
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+
+// 项目主页
+def siteUrl = 'https://github.com/StudyLifeTime/CMAutoTrack'
+// 项目的git地址
+def gitUrl = 'https://github.com/StudyLifeTime/CMAutoTrack.git'
+// 发布到JCenter上的项目名字
+def libName = "cmaudotrack"
+// 仓库名
+def repoName = 'maven'
+// 项目描述
+def projectDescription = "Android AutoTrack Solution"
+
+group = "me.cangming.autotrack"
+// 版本号，下次更新是只需要更改版本号即可
+version = "0.0.1"
+
+/**
+ * 打包jardoc.jar 和 sources.jar
+ */
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+    source = android.sourceSets.main.java.srcDirs
+    classpath += files(android.bootClasspath)
+
+    //注意添加编码方式，否则默认gbk编码在显示中文时乱码
+    options.encoding = "utf-8"
+    options.charSet = "utf-8"
+
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+
+    android.libraryVariants.all { variant ->
+        variant.javaCompileProvider.configure{
+            javadoc.classpath += files(it.classpath.files)
+        }
+    }
+
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+// 配置maven库，生成POM.xml文件
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'jar'
+                //项目描述
+                name projectDescription
+                url siteUrl
+                licenses {
+                    license {
+                        //开源协议
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        //开发者的个人信息
+                        id 'cangming'
+                        name 'cangming'
+                        email 'cfloveyr@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+//上传到JCenter
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")    //读取 local.properties 文件里面的 bintray.user
+    key = properties.getProperty("bintray.apikey")   //读取 local.properties 文件里面的 bintray.apikey
+    configurations = ['archives']
+    pkg {
+        //注意：这里的repo值必须要和创建Maven仓库的时候的名字一样
+        repo = repoName
+        //发布到JCenter上的项目名字
+        name = libName
+        //项目描述
+        desc = projectDescription
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
